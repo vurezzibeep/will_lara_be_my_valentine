@@ -23,7 +23,6 @@
             touch-action: manipulation;
         }
 
-        /* Frosted Glass Effect */
         .container {
             text-align: center;
             background: rgba(255, 255, 255, 0.8);
@@ -58,7 +57,7 @@
             justify-content: center;
             align-items: center;
             gap: 15px;
-            height: 100px; /* Space for the runaway button */
+            height: 80px;
             position: relative;
         }
 
@@ -69,21 +68,12 @@
             border-radius: 25px;
             cursor: pointer;
             font-weight: bold;
-            transition: transform 0.2s;
+            transition: all 0.2s;
             -webkit-tap-highlight-color: transparent;
         }
 
-        #yes-btn {
-            background: var(--primary);
-            color: white;
-            z-index: 11;
-        }
-
-        #no-btn {
-            background: #adb5bd;
-            color: white;
-            position: relative;
-        }
+        #yes-btn { background: var(--primary); color: white; z-index: 11; }
+        #no-btn { background: #adb5bd; color: white; position: relative; }
 
         .hidden { display: none !important; }
 
@@ -96,15 +86,6 @@
             background: rgba(255, 255, 255, 0.5);
             border-radius: 15px;
             margin-top: 15px;
-            min-height: 50px;
-        }
-
-        .video-wrapper {
-            margin-top: 20px;
-            border-radius: 15px;
-            overflow: hidden;
-            aspect-ratio: 16 / 9;
-            background: #000;
         }
 
         .emoji {
@@ -124,7 +105,7 @@
 
     <div class="container" id="main-card">
         <div class="tenor-gif-embed" data-postid="11377592630810390214" data-share-method="host" data-aspect-ratio="1.05957" data-width="100%"><a href="https://tenor.com/view/cutesie-gif-11377592630810390214">Cutesie GIF</a>from <a href="https://tenor.com/search/cutesie-gifs">Cutesie GIFs</a></div> <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
-        <h1 id="main-text">Will you be my Valentine? 💖</h1>
+        <h1>Will you be my Valentine? 💖</h1>
         <div class="buttons">
             <button id="yes-btn">Yes</button>
             <button id="no-btn">No</button>
@@ -134,18 +115,14 @@
     <div class="container hidden" id="celebration">
         <div class="tenor-gif-embed" data-postid="13759391442761662032" data-share-method="host" data-aspect-ratio="1.0375" data-width="100%"><a href="https://tenor.com/view/bubu-dancing-dance-happy-dance-bubu-cat-gif-13759391442761662032">Bubu Dancing Dance GIF</a>from <a href="https://tenor.com/search/bubu+dancing-gifs">Bubu Dancing GIFs</a></div> <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
         <h1 style="margin-bottom: 10px;">Yay! 🥰</h1>
-        
         <div class="letter" id="typewriter-text"></div>
-
-        <div id="video-container"></div>
-
         <p id="signature" style="margin-top: 20px; font-weight: bold; color: var(--primary); opacity: 0;">Forever Yours, [Your Name] ❤️</p>
     </div>
 
     <script>
-        /* 🎵 SETTINGS */
-        const youtubeLink = "https://www.youtube.com/watch?v=-MlR6tFh8Gs&list=RD-MlR6tFh8Gs&start_radio=1"; 
-        const startAtSecond = 24; 
+        /* 🎵 AD-FREE SETTINGS */
+        const audioLink = "https://drive.google.com/file/d/1C2Mc5af1BZd327pirjuUeck3I1Civd3a/view?usp=drive_link"; 
+        const startAtSecond = 24; // Starts exactly at this second
         const yourParagraph = `My dearest [Her Name],
 
 [PASTE YOUR PARAGRAPH HERE]`;
@@ -155,21 +132,19 @@
         const mainCard = document.getElementById('main-card');
         const celebration = document.getElementById('celebration');
         
-        // --- 1. RUNAWAY NO BUTTON (Mobile Friendly) ---
+        // --- 1. RUNAWAY NO BUTTON ---
         noBtn.addEventListener('touchstart', moveButton);
         noBtn.addEventListener('mouseover', moveButton);
 
-        function moveButton(e) {
+        function moveButton() {
             const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
             const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
             noBtn.style.position = 'fixed';
             noBtn.style.left = x + 'px';
             noBtn.style.top = y + 'px';
             
-            // Also make Yes button bigger!
             let currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
             yesBtn.style.fontSize = (currentSize + 2) + 'px';
-            yesBtn.style.padding = '20px 40px';
         }
 
         // --- 2. YES ACTION ---
@@ -177,47 +152,25 @@
             mainCard.classList.add('hidden');
             celebration.classList.remove('hidden');
             
-            // Start Music
-            startMusic();
+            // Start Ad-Free Audio
+            if (audioLink && audioLink !== "PASTE_DIRECT_MP3_LINK_HERE") {
+                const audio = new Audio(audioLink);
+                audio.currentTime = startAtSecond; // Jump to the specific second
+                audio.play().catch(e => console.log("Audio play blocked, but interaction should allow it."));
+            }
             
-            // Start Typewriter
             typeWriter();
-            
-            // Start Emojis
             setInterval(createEmoji, 300);
         });
 
-        function startMusic() {
-            if (youtubeLink && youtubeLink !== "PASTE_LINK_HERE") {
-                let videoId = "";
-                const url = youtubeLink;
-                if (url.includes("v=")) { videoId = url.split("v=")[1].split("&")[0]; }
-                else if (url.includes("youtu.be/")) { videoId = url.split("youtu.be/")[1].split("?")[0]; }
-                else { videoId = url; }
-
-                if (videoId) {
-                    const videoContainer = document.getElementById('video-container');
-                    videoContainer.innerHTML = `
-                        <div class="video-wrapper">
-                            <iframe width="100%" height="100%" 
-                            src="https://www.youtube.com/embed/${videoId}?autoplay=1&start=${startAtSecond}&controls=1" 
-                            frameborder="0" allow="autoplay; encrypted-media"></iframe>
-                        </div>`;
-                }
-            }
-        }
-
         function typeWriter() {
             const element = document.getElementById('typewriter-text');
-            const text = yourParagraph;
             let i = 0;
             function type() {
-                if (i < text.length) {
-                    element.innerHTML += text.charAt(i);
+                if (i < yourParagraph.length) {
+                    element.innerHTML += yourParagraph.charAt(i);
                     i++;
                     setTimeout(type, 50);
-                    // Auto scroll to bottom as it types
-                    window.scrollTo(0, document.body.scrollHeight);
                 } else {
                     document.getElementById('signature').style.opacity = '1';
                 }
@@ -226,7 +179,7 @@
         }
 
         function createEmoji() {
-            const emojis = ['❤️', '💖', '✨', '🌸', '🧸'];
+            const emojis = ['❤️', '💖', '✨', '🌸'];
             const e = document.createElement('div');
             e.classList.add('emoji');
             e.innerText = emojis[Math.floor(Math.random() * emojis.length)];
