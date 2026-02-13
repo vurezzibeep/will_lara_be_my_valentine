@@ -5,47 +5,117 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>For You ❤️</title>
     <style>
-        :root { --primary: #ff4d6d; --secondary: #ffb3c1; --bg: #fff0f3; }
+        :root {
+            --primary: #ff4d6d;
+            --secondary: #ffb3c1;
+            --bg: #fff0f3;
+        }
+
         body {
-            display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0;
-            background: linear-gradient(-45deg, #fff0f3, #ffccd5, #fff0f3, #ffb3c1);
-            background-size: 400% 400%; animation: gradient 15s ease infinite;
-            font-family: -apple-system, system-ui, sans-serif; overflow: hidden; touch-action: manipulation;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: var(--bg);
+            font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow: hidden;
+            touch-action: manipulation;
         }
-        @keyframes gradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
         .container {
-            text-align: center; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px);
-            padding: 30px; border-radius: 30px; box-shadow: 0 10px 40px rgba(255, 77, 109, 0.2);
-            width: 85%; max-width: 320px; z-index: 10;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 30px;
+            border-radius: 30px;
+            box-shadow: 0 10px 40px rgba(255, 77, 109, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            max-width: 350px;
+            width: 90%;
+            z-index: 10;
+            position: relative;
         }
-        #valentine-gif { width: 100%; max-width: 160px; border-radius: 20px; margin-bottom: 20px; }
-        h1 { color: var(--primary); font-size: 1.4rem; margin-bottom: 20px; }
-        .buttons { display: flex; justify-content: center; gap: 15px; min-height: 80px; position: relative; }
+
+        #valentine-gif {
+            width: 100%;
+            max-width: 200px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            min-height: 100px;
+            position: relative;
+        }
+
         button {
-            padding: 15px 25px; font-size: 1.1rem; border: none; border-radius: 50px;
-            cursor: pointer; font-weight: bold; transition: 0.2s; -webkit-tap-highlight-color: transparent;
+            padding: 15px 32px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            -webkit-tap-highlight-color: transparent;
         }
-        #yes-btn { background: var(--primary); color: white; }
-        #no-btn { background: #adb5bd; color: white; position: relative; }
-        .reason-text { font-size: 1.1rem; color: #d63384; font-weight: 600; margin: 20px 0; min-height: 80px; display: flex; align-items: center; justify-content: center; }
-        .letter {
-            text-align: left; line-height: 1.6; font-size: 1.05rem; color: #333;
-            padding: 15px; background: white; border-radius: 15px; white-space: pre-wrap;
-            border: 1px dashed var(--secondary); max-height: 250px; overflow-y: auto;
+
+        #yes-btn {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
+            z-index: 11;
         }
+
+        #no-btn {
+            background: #adb5bd;
+            color: white;
+            position: relative;
+        }
+
         .hidden { display: none !important; }
-        .sparkle { position: fixed; pointer-events: none; z-index: 99; font-size: 20px; animation: up 1s forwards; }
-        @keyframes up { 0% { transform: translate(0,0); opacity: 1; } 100% { transform: translate(var(--x), var(--y)); opacity: 0; } }
+
+        .letter {
+            text-align: left;
+            line-height: 1.7;
+            font-size: 1.05rem;
+            color: #333;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 15px;
+            margin-top: 15px;
+            white-space: pre-wrap;
+            border: 1px solid rgba(255, 179, 193, 0.3);
+        }
+
+        .emoji {
+            position: fixed;
+            top: -10vh;
+            user-select: none;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(115vh) rotate(360deg); opacity: 0; }
+        }
     </style>
 </head>
-<body onclick="spawnSparkles(event)">
+<body>
 
-    <!-- Hidden Audio Tag -->
-    <audio id="bg-music" preload="auto">
-        <source id="audio-source" src="" type="audio/mpeg">
-    </audio>
-
-    <div class="container" id="card-1">
+    <div class="container" id="main-card">
         <div class="tenor-gif-embed" data-postid="11377592630810390214" data-share-method="host" data-aspect-ratio="1.05957" data-width="100%"><a href="https://tenor.com/view/cutesie-gif-11377592630810390214">Cutesie GIF</a>from <a href="https://tenor.com/search/cutesie-gifs">Cutesie GIFs</a></div> <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
         <h1>Will you be my Valentine? 💖</h1>
         <div class="buttons">
@@ -54,104 +124,99 @@
         </div>
     </div>
 
-    <div class="container hidden" id="card-2">
-        <h1>10 Reasons Why... ❤️</h1>
-        <div class="reason-text" id="reason-display">Thinking of the first one...</div>
-        <button id="next-btn" style="background: var(--primary); color: white;">Next Reason ✨</button>
-        <div style="font-size: 0.8rem; color: #ff8fa3; margin-top: 10px;" id="count">0 / 10</div>
-    </div>
-
-    <div class="container hidden" id="card-3">
+    <div class="container hidden" id="celebration">
         <div class="tenor-gif-embed" data-postid="13759391442761662032" data-share-method="host" data-aspect-ratio="1.0375" data-width="100%"><a href="https://tenor.com/view/bubu-dancing-dance-happy-dance-bubu-cat-gif-13759391442761662032">Bubu Dancing Dance GIF</a>from <a href="https://tenor.com/search/bubu+dancing-gifs">Bubu Dancing GIFs</a></div> <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
-        <h1 style="margin-bottom: 10px;">For You... 🥰</h1>
-        <div class="letter" id="letter-text"></div>
-        <p id="sig" style="margin-top: 15px; font-weight: bold; color: var(--primary); opacity: 0; transition: 1s;">Forever Yours, [Your Name] ❤️</p>
+        <h1 style="margin-bottom: 10px; font-size: 1.8rem;">Yay! 🥰</h1>
+        
+        <div class="letter" id="typewriter-text"></div>
+
+        <p id="signature" style="margin-top: 25px; font-weight: bold; color: var(--primary); font-size: 1.2rem; opacity: 0; transition: opacity 1s;">Forever Yours, [Your Name] ❤️</p>
     </div>
 
     <script>
-        /* CONFIG */
+        /* 🎵 FINAL SETTINGS 
+           Paste your Direct MP3 link (from Catbox.moe or similar) below.
+        */
         const audioLink = "https://files.catbox.moe/u8mjsi.mp3"; 
-        const startTime = 24; 
-        const message = `My dearest [Her Name],
+        const startAtSecond = 24; // The second you want Leonard to start singing
+        
+        const yourParagraph = `My dearest [Her Name],
 
-[PASTE YOUR LETTER HERE]`;
+[PASTE YOUR ROMANTIC PARAGRAPH HERE]`;
 
-        const reasons = [
-            "Your beautiful smile. ✨", "How you make me laugh. 🎶", "Your kind heart. ❤️", 
-            "Your intelligence. 🌟", "Your eyes. 👁️‍🗨️", "How safe I feel with you. 🏠",
-            "Our inside jokes. 😂", "Your thoughtfulness. 🧸", "Your strength. 💪", "Just being you. 🌹"
-        ];
+        const yesBtn = document.getElementById('yes-btn');
+        const noBtn = document.getElementById('no-btn');
+        const mainCard = document.getElementById('main-card');
+        const celebration = document.getElementById('celebration');
+        
+        // --- 1. RUNAWAY NO BUTTON (Mobile Teleport) ---
+        noBtn.addEventListener('touchstart', moveButton);
+        noBtn.addEventListener('click', moveButton); // Fallback for some browsers
 
-        const audio = document.getElementById('bg-music');
-        const source = document.getElementById('audio-source');
-        source.src = audioLink;
-        audio.load();
-
-        let step = 0;
-
-        // Runaway No
-        document.getElementById('no-btn').addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            const btn = e.target;
-            btn.style.position = 'fixed';
-            btn.style.left = Math.random() * (window.innerWidth - 80) + 'px';
-            btn.style.top = Math.random() * (window.innerHeight - 40) + 'px';
-        });
-
-        // Yes Logic
-        document.getElementById('yes-btn').addEventListener('click', () => {
-            // UNLOCK AUDIO: Play and immediately pause
-            audio.play().then(() => { audio.pause(); }).catch(e => console.log(e));
-            document.getElementById('card-1').classList.add('hidden');
-            document.getElementById('card-2').classList.remove('hidden');
-        });
-
-        // Reasons Logic
-        document.getElementById('next-btn').addEventListener('click', () => {
-            // Keep audio channel alive
-            audio.play().then(() => { audio.pause(); }).catch(e => {});
-
-            if (step < reasons.length) {
-                document.getElementById('reason-display').innerText = reasons[step];
-                step++;
-                document.getElementById('count').innerText = step + " / 10";
-            } else {
-                document.getElementById('card-2').classList.add('hidden');
-                document.getElementById('card-3').classList.remove('hidden');
-                startFinal();
-            }
-        });
-
-        function startFinal() {
-            audio.currentTime = startTime;
-            audio.play();
+        function moveButton(e) {
+            e.preventDefault(); // Stop accidental clicks
+            const padding = 50;
+            const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+            const maxY = window.innerHeight - noBtn.offsetHeight - padding;
             
+            const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
+            
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+            
+            // Make Yes button grow bigger
+            let currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
+            if (currentSize < 40) { // Cap growth so it doesn't break layout
+                yesBtn.style.fontSize = (currentSize + 3) + 'px';
+                yesBtn.style.padding = (parseFloat(window.getComputedStyle(yesBtn).paddingTop) + 2) + 'px ' + 
+                                       (parseFloat(window.getComputedStyle(yesBtn).paddingLeft) + 4) + 'px';
+            }
+        }
+
+        // --- 2. YES ACTION ---
+        yesBtn.addEventListener('click', () => {
+            mainCard.classList.add('hidden');
+            celebration.classList.remove('hidden');
+            
+            // Start Audio
+            if (audioLink && audioLink !== "PASTE_DIRECT_MP3_LINK_HERE") {
+                const audio = new Audio(audioLink);
+                audio.currentTime = startAtSecond;
+                audio.play().catch(err => console.log("Audio needs interaction, which this click provides."));
+            }
+            
+            // Start typewriter and effects
+            typeWriter();
+            setInterval(createEmoji, 300);
+        });
+
+        function typeWriter() {
+            const element = document.getElementById('typewriter-text');
             let i = 0;
-            const target = document.getElementById('letter-text');
             function type() {
-                if (i < message.length) {
-                    target.innerHTML += message.charAt(i);
+                if (i < yourParagraph.length) {
+                    element.innerHTML += yourParagraph.charAt(i);
                     i++;
-                    setTimeout(type, 50);
-                } else { document.getElementById('sig').style.opacity = '1'; }
+                    setTimeout(type, 60); // Soulful Leonard Cohen speed
+                } else {
+                    document.getElementById('signature').style.opacity = '1';
+                }
             }
             type();
         }
 
-        function spawnSparkles(e) {
-            const x = e.pageX || (e.touches ? e.touches[0].pageX : 0);
-            const y = e.pageY || (e.touches ? e.touches[0].pageY : 0);
-            for(let i=0; i<6; i++) {
-                const s = document.createElement('div');
-                s.className = 'sparkle';
-                s.innerText = '❤️';
-                s.style.left = x + 'px'; s.style.top = y + 'px';
-                s.style.setProperty('--x', (Math.random()*100-50)+'px');
-                s.style.setProperty('--y', (Math.random()*-100-50)+'px');
-                document.body.appendChild(s);
-                setTimeout(() => s.remove(), 1000);
-            }
+        function createEmoji() {
+            const emojis = ['❤️', '💖', '✨', '🌸', '🌹'];
+            const e = document.createElement('div');
+            e.classList.add('emoji');
+            e.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+            e.style.left = Math.random() * 100 + 'vw';
+            e.style.fontSize = (Math.random() * 20 + 20) + 'px';
+            e.style.animation = `fall ${Math.random() * 2 + 3}s linear forwards`;
+            document.body.appendChild(e);
+            setTimeout(() => e.remove(), 5000);
         }
     </script>
 </body>
-</html>
