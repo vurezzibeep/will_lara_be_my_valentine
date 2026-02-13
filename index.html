@@ -19,7 +19,8 @@
             margin: 0;
             background-color: var(--bg);
             font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            overflow: hidden;
+            /* Allow the main page to scroll if the card gets very tall */
+            overflow-y: auto; 
             touch-action: manipulation;
         }
 
@@ -28,7 +29,7 @@
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            padding: 30px;
+            padding: 25px;
             border-radius: 30px;
             box-shadow: 0 10px 40px rgba(255, 77, 109, 0.15);
             border: 1px solid rgba(255, 255, 255, 0.4);
@@ -36,13 +37,7 @@
             width: 90%;
             z-index: 10;
             position: relative;
-        }
-
-        #valentine-gif {
-            width: 100%;
-            max-width: 200px;
-            border-radius: 20px;
-            margin-bottom: 20px;
+            margin: 20px 0; /* Space for scrolling on mobile */
         }
 
         h1 {
@@ -87,6 +82,7 @@
 
         .hidden { display: none !important; }
 
+        /* FIXED: Scrolling for long paragraphs */
         .letter {
             text-align: left;
             line-height: 1.7;
@@ -98,6 +94,11 @@
             margin-top: 15px;
             white-space: pre-wrap;
             border: 1px solid rgba(255, 179, 193, 0.3);
+            
+            /* The Scroll Magic */
+            max-height: 350px; /* Limits height on phone screens */
+            overflow-y: auto;  /* Adds scrollbar if text is too long */
+            touch-action: auto; /* Allows thumb-scrolling inside the box */
         }
 
         .emoji {
@@ -134,71 +135,45 @@
     </div>
 
     <script>
-        /* 🎵 FINAL SETTINGS 
-           Paste your Direct MP3 link (from Catbox.moe or similar) below.
-        */
         const audioLink = "https://files.catbox.moe/u8mjsi.mp3"; 
-        const startAtSecond = 24; // The second you want Leonard to start singing
+        const startAtSecond = 24; 
         
-        const yourParagraph = `so you said YES! YAYAYAYAYAYYAYAYA. well the truth is IT WAS ALWAYS YOU HAHAHAHAHAHAHA
-
-im so deeply in love with u and i dont just mean that hek, i mean im in love with who u are. the way ur beautiful silk hair falls so perfectly, the way ur eyes shine, those eyes i fell in love with WITHOUT even realizing it. ur smile, ur laugh.. ITS HONESTLY MY FAV SOUND IN THE WORLD! u have this way of making even the smallest most ordinary moments feel so special just by being there.
-
-i love how u support me even when im at my worst. when im stressed, quiet or not my best self, u still stand by me. u make me feel safe and at peace whenever im with u. ur sense of humor (zabet wela jondi), ur softness, ur strength, ur moods, ur heart, i love ALL OF IT! i love u simple because u are u, and thats more than enough for me! 
-
-THIS IS OUR SECOND VALENTINE TOGETHER, and it wont be our last. u will be my valentine forever. not just today, not just this year BUT ALWAYSSSS. i choose u every single time!
-
-NOW GO AND PICK A GIFT FROM YOUR DADDY! AND TELL ME HOW TO SHIP IT...
-
-
-at the end i would love to tell u..
-
-If you want a lover, I'll do anything you ask me to... and you know I'm your man.`;
+        const yourParagraph = `so you said YES! YAYAYAYAYAYYAYAYA. well the truth is IT WAS ALWAYS YOU HAHAHAHAHAHAHA\n\nim so deeply in love with u and i dont just mean that hek, i mean im in love with who u are. the way ur beautiful silk hair falls so perfectly, the way ur eyes shine, those eyes i fell in love with WITHOUT even realizing it. ur smile, ur laugh.. ITS HONESTLY MY FAV SOUND IN THE WORLD! u have this way of making even the smallest most ordinary moments feel so special just by being there.\n\ni love how u support me even when im at my worst. when im stressed, quiet or not my best self, u still stand by me. u make me feel safe and at peace whenever im with u. ur sense of humor (zabet wela jondi), ur softness, ur strength, ur moods, ur heart, i love ALL OF IT! i love u simple because u are u, and thats more than enough for me! \n\nTHIS IS OUR SECOND VALENTINE TOGETHER, and it wont be our last. u will be my valentine forever. not just today, not just this year BUT ALWAYSSSS. i choose u every single time!\n\nNOW GO AND PICK A GIFT FROM YOUR DADDY! AND TELL ME HOW TO SHIP IT...\n\n\nat the end i would love to tell u..\n\nIf you want a lover, I'll do anything you ask me to... and you know I'm your man.`;
 
         const yesBtn = document.getElementById('yes-btn');
         const noBtn = document.getElementById('no-btn');
         const mainCard = document.getElementById('main-card');
         const celebration = document.getElementById('celebration');
         
-        // --- 1. RUNAWAY NO BUTTON (Mobile Teleport) ---
         noBtn.addEventListener('touchstart', moveButton);
-        noBtn.addEventListener('click', moveButton); // Fallback for some browsers
+        noBtn.addEventListener('click', moveButton);
 
         function moveButton(e) {
-            e.preventDefault(); // Stop accidental clicks
+            e.preventDefault();
             const padding = 50;
             const maxX = window.innerWidth - noBtn.offsetWidth - padding;
             const maxY = window.innerHeight - noBtn.offsetHeight - padding;
-            
             const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
             const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
-            
             noBtn.style.position = 'fixed';
             noBtn.style.left = randomX + 'px';
             noBtn.style.top = randomY + 'px';
             
-            // Make Yes button grow bigger
             let currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
-            if (currentSize < 40) { // Cap growth so it doesn't break layout
+            if (currentSize < 40) {
                 yesBtn.style.fontSize = (currentSize + 3) + 'px';
-                yesBtn.style.padding = (parseFloat(window.getComputedStyle(yesBtn).paddingTop) + 2) + 'px ' + 
-                                       (parseFloat(window.getComputedStyle(yesBtn).paddingLeft) + 4) + 'px';
+                yesBtn.style.padding = (parseFloat(window.getComputedStyle(yesBtn).paddingTop) + 2) + 'px ' + (parseFloat(window.getComputedStyle(yesBtn).paddingLeft) + 4) + 'px';
             }
         }
 
-        // --- 2. YES ACTION ---
         yesBtn.addEventListener('click', () => {
             mainCard.classList.add('hidden');
             celebration.classList.remove('hidden');
-            
-            // Start Audio
-            if (audioLink && audioLink !== "PASTE_DIRECT_MP3_LINK_HERE") {
+            if (audioLink) {
                 const audio = new Audio(audioLink);
                 audio.currentTime = startAtSecond;
-                audio.play().catch(err => console.log("Audio needs interaction, which this click provides."));
+                audio.play().catch(err => console.log(err));
             }
-            
-            // Start typewriter and effects
             typeWriter();
             setInterval(createEmoji, 300);
         });
@@ -210,7 +185,9 @@ If you want a lover, I'll do anything you ask me to... and you know I'm your man
                 if (i < yourParagraph.length) {
                     element.innerHTML += yourParagraph.charAt(i);
                     i++;
-                    setTimeout(type, 60); // Soulful Leonard Cohen speed
+                    // Automatically scroll the box to the bottom as it types
+                    element.scrollTop = element.scrollHeight; 
+                    setTimeout(type, 60);
                 } else {
                     document.getElementById('signature').style.opacity = '1';
                 }
@@ -231,3 +208,4 @@ If you want a lover, I'll do anything you ask me to... and you know I'm your man
         }
     </script>
 </body>
+</html>
