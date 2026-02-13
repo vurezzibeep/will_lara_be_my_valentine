@@ -71,13 +71,9 @@
         #yes-btn { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4); }
         #no-btn { background: #adb5bd; color: white; position: relative; }
 
-        .hidden { display: none !important; }
-
-        /* Reasons Box */
-        .reason-text { font-size: 1.2rem; color: #d63384; font-weight: 600; margin-bottom: 20px; min-height: 60px; }
+        .reason-text { font-size: 1.1rem; color: #d63384; font-weight: 600; margin-bottom: 20px; min-height: 70px; display: flex; align-items: center; justify-content: center; }
         .counter { font-size: 0.9rem; color: #ff8fa3; margin-top: 10px; }
 
-        /* Letter Box */
         .letter {
             text-align: left;
             line-height: 1.7;
@@ -88,6 +84,8 @@
             border-radius: 15px;
             white-space: pre-wrap;
             border: 1px dashed var(--secondary);
+            max-height: 300px;
+            overflow-y: auto;
         }
 
         .sparkle {
@@ -113,11 +111,12 @@
         }
 
         @keyframes fall { to { transform: translateY(115vh) rotate(360deg); opacity: 0; } }
+        
+        .hidden { display: none !important; }
     </style>
 </head>
 <body onclick="createSparkle(event)">
 
-    <!-- PHASE 1: THE QUESTION -->
     <div class="container" id="main-card">
         <div class="tenor-gif-embed" data-postid="11377592630810390214" data-share-method="host" data-aspect-ratio="1.05957" data-width="100%"><a href="https://tenor.com/view/cutesie-gif-11377592630810390214">Cutesie GIF</a>from <a href="https://tenor.com/search/cutesie-gifs">Cutesie GIFs</a></div> <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
         <h1>Will you be my Valentine? 💖</h1>
@@ -127,15 +126,13 @@
         </div>
     </div>
 
-    <!-- PHASE 2: THE REASONS -->
     <div class="container hidden" id="reasons-card">
         <h1>10 Reasons Why... ❤️</h1>
-        <div class="reason-text" id="reason-display">Click the button to start...</div>
+        <div class="reason-text" id="reason-display">Click below to see...</div>
         <button id="next-reason-btn" style="background: var(--primary); color: white;">Next Reason ✨</button>
         <div class="counter" id="reason-counter">0 / 10</div>
     </div>
 
-    <!-- PHASE 3: THE FINAL LETTER -->
     <div class="container hidden" id="celebration">
         <div class="tenor-gif-embed" data-postid="13759391442761662032" data-share-method="host" data-aspect-ratio="1.0375" data-width="100%"><a href="https://tenor.com/view/bubu-dancing-dance-happy-dance-bubu-cat-gif-13759391442761662032">Bubu Dancing Dance GIF</a>from <a href="https://tenor.com/search/bubu+dancing-gifs">Bubu Dancing GIFs</a></div> <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
         <h1 style="margin-bottom: 10px;">For You... 🥰</h1>
@@ -144,8 +141,8 @@
     </div>
 
     <script>
-        /* 🎵 SETTINGS */
-        const audioLink = "startAtSecondhttps://files.catbox.moe/u8mjsi.mp3"; 
+        /* 🎵 FINAL SETTINGS */
+        const audioLink = "https://files.catbox.moe/u8mjsi.mp3"; 
         const startAtSecond = 24; 
         const yourParagraph = `My dearest [Her Name],
 
@@ -164,6 +161,10 @@
             "Simply because you are you, and that is more than enough. 🌹"
         ];
 
+        const audio = new Audio();
+        audio.src = audioLink;
+        audio.preload = "auto";
+
         const yesBtn = document.getElementById('yes-btn');
         const noBtn = document.getElementById('no-btn');
         const nextReasonBtn = document.getElementById('next-reason-btn');
@@ -173,7 +174,6 @@
         
         let currentReason = 0;
 
-        // --- RUNAWAY NO ---
         noBtn.addEventListener('touchstart', (e) => {
             e.preventDefault();
             const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
@@ -181,17 +181,19 @@
             noBtn.style.position = 'fixed';
             noBtn.style.left = x + 'px';
             noBtn.style.top = y + 'px';
-            yesBtn.style.transform = `scale(${1 + (currentReason+1)*0.1})`;
         });
 
-        // --- YES -> REASONS ---
         yesBtn.addEventListener('click', () => {
+            // Wake up audio on first click
+            audio.play().then(() => { audio.pause(); }).catch(e => {}); 
             mainCard.classList.add('hidden');
             reasonsCard.classList.remove('hidden');
         });
 
-        // --- REASONS LOOP ---
         nextReasonBtn.addEventListener('click', () => {
+            // Keep the audio channel warm
+            if (audio.paused) { audio.play().then(() => { audio.pause(); }).catch(e => {}); }
+
             if (currentReason < reasons.length) {
                 document.getElementById('reason-display').innerText = reasons[currentReason];
                 currentReason++;
@@ -204,13 +206,9 @@
         });
 
         function startFinalPhase() {
-            // Start Audio
-            if (audioLink && audioLink !== "https://files.catbox.moe/u8mjsi.mp3") {
-                const audio = new Audio(audioLink);
-                audio.currentTime = startAtSecond;
-                audio.play();
-            }
-            // Typewriter
+            audio.currentTime = startAtSecond;
+            audio.play();
+            
             let i = 0;
             function type() {
                 if (i < yourParagraph.length) {
@@ -220,19 +218,20 @@
                 } else { document.getElementById('signature').style.opacity = '1'; }
             }
             type();
-            // Hearts
             setInterval(createFallingEmoji, 300);
         }
 
-        // --- SPARKLE EFFECT ---
         function createSparkle(e) {
             const sparkles = ['❤️', '✨', '💖'];
+            const xPos = e.pageX || (e.touches ? e.touches[0].pageX : 0);
+            const yPos = e.pageY || (e.touches ? e.touches[0].pageY : 0);
+            
             for (let i = 0; i < 5; i++) {
                 const s = document.createElement('div');
                 s.className = 'sparkle';
                 s.innerText = sparkles[Math.floor(Math.random() * sparkles.length)];
-                s.style.left = (e.pageX || e.touches[0].pageX) + 'px';
-                s.style.top = (e.pageY || e.touches[0].pageY) + 'px';
+                s.style.left = xPos + 'px';
+                s.style.top = yPos + 'px';
                 s.style.setProperty('--x', (Math.random() * 100 - 50) + 'px');
                 s.style.setProperty('--y', (Math.random() * -100 - 50) + 'px');
                 document.body.appendChild(s);
