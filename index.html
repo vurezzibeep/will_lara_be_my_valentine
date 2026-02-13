@@ -2,46 +2,55 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Be My Valentine?</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For You ❤️</title>
     <style>
+        :root {
+            --primary: #ff4d6d;
+            --secondary: #ffb3c1;
+            --bg: #fff0f3;
+        }
+
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background-color: #ffe4e1;
-            font-family: 'Comic Sans MS', 'Arial', sans-serif;
-            overflow-x: hidden;
-            padding: 20px;
-            box-sizing: border-box;
+            background-color: var(--bg);
+            font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow: hidden;
+            touch-action: manipulation;
         }
 
+        /* Frosted Glass Effect */
         .container {
             text-align: center;
-            background: white;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             padding: 30px;
             border-radius: 30px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            max-width: 450px;
-            width: 100%;
-            position: relative;
+            box-shadow: 0 8px 32px rgba(255, 77, 109, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            max-width: 340px;
+            width: 90%;
             z-index: 10;
+            position: relative;
         }
 
         #valentine-gif {
-            width: 200px;
-            height: auto;
+            width: 100%;
+            max-width: 200px;
             border-radius: 20px;
             margin-bottom: 20px;
-            min-height: 150px; /* Prevents the card from collapsing if the GIF is slow */
         }
 
         h1 {
-            color: #d63384;
-            font-size: 1.8rem;
+            color: var(--primary);
+            font-size: 1.5rem;
             margin-bottom: 25px;
+            font-weight: 700;
         }
 
         .buttons {
@@ -49,47 +58,56 @@
             justify-content: center;
             align-items: center;
             gap: 15px;
-            flex-wrap: wrap;
+            height: 100px; /* Space for the runaway button */
+            position: relative;
         }
 
         button {
-            padding: 12px 28px;
+            padding: 15px 30px;
             font-size: 1.1rem;
             border: none;
-            border-radius: 50px;
+            border-radius: 25px;
             cursor: pointer;
-            transition: all 0.2s ease;
             font-weight: bold;
+            transition: transform 0.2s;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        #yes-btn { background-color: #4caf50; color: white; }
-        #no-btn { background-color: #f44336; color: white; }
+        #yes-btn {
+            background: var(--primary);
+            color: white;
+            z-index: 11;
+        }
+
+        #no-btn {
+            background: #adb5bd;
+            color: white;
+            position: relative;
+        }
 
         .hidden { display: none !important; }
 
         .letter {
             text-align: left;
             line-height: 1.6;
-            font-size: 1.05rem;
+            font-size: 1rem;
             color: #444;
-            padding: 20px;
-            background: #fffafa;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.5);
             border-radius: 15px;
-            border: 1px dashed #ffb6c1;
             margin-top: 15px;
-            white-space: pre-wrap;
+            min-height: 50px;
         }
 
         .video-wrapper {
             margin-top: 20px;
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
             aspect-ratio: 16 / 9;
             background: #000;
         }
 
-        .heart {
+        .emoji {
             position: fixed;
             top: -10vh;
             user-select: none;
@@ -98,15 +116,15 @@
         }
 
         @keyframes fall {
-            to { transform: translateY(110vh) rotate(360deg); }
+            to { transform: translateY(110vh) rotate(360deg); opacity: 0; }
         }
     </style>
 </head>
 <body>
 
     <div class="container" id="main-card">
-        <!-- New, more reliable GIF link -->
-<div class="tenor-gif-embed" data-postid="11377592630810390214" data-share-method="host" data-aspect-ratio="1.05957" data-width="100%"><a href="https://tenor.com/view/cutesie-gif-11377592630810390214">Cutesie GIF</a>from <a href="https://tenor.com/search/cutesie-gifs">Cutesie GIFs</a></div> <script type="text/javascript" async src="https://tenor.com/embed.js"></script>        <h1>Will you be my Valentine? 💖</h1>
+        <div class="tenor-gif-embed" data-postid="11377592630810390214" data-share-method="host" data-aspect-ratio="1.05957" data-width="100%"><a href="https://tenor.com/view/cutesie-gif-11377592630810390214">Cutesie GIF</a>from <a href="https://tenor.com/search/cutesie-gifs">Cutesie GIFs</a></div> <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+        <h1 id="main-text">Will you be my Valentine? 💖</h1>
         <div class="buttons">
             <button id="yes-btn">Yes</button>
             <button id="no-btn">No</button>
@@ -115,51 +133,61 @@
 
     <div class="container hidden" id="celebration">
         <div class="tenor-gif-embed" data-postid="13759391442761662032" data-share-method="host" data-aspect-ratio="1.0375" data-width="100%"><a href="https://tenor.com/view/bubu-dancing-dance-happy-dance-bubu-cat-gif-13759391442761662032">Bubu Dancing Dance GIF</a>from <a href="https://tenor.com/search/bubu+dancing-gifs">Bubu Dancing GIFs</a></div> <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
-        <h1 style="color: #ff1493; margin-bottom: 5px;">Yay! 🥰</h1>
+        <h1 style="margin-bottom: 10px;">Yay! 🥰</h1>
         
-        <div class="letter">
-<!-- ✍️ EDIT YOUR PARAGRAPH BELOW ✍️ -->
-My dearest [Her Name],
-
-[PASTE YOUR PARAGRAPH HERE]
-<!-- ✍️ EDIT YOUR PARAGRAPH ABOVE ✍️ -->
-        </div>
+        <div class="letter" id="typewriter-text"></div>
 
         <div id="video-container"></div>
 
-        <p style="margin-top: 20px; font-weight: bold; color: #d63384;">Forever Yours, [Your Name] ❤️</p>
+        <p id="signature" style="margin-top: 20px; font-weight: bold; color: var(--primary); opacity: 0;">Forever Yours, [Your Name] ❤️</p>
     </div>
 
     <script>
         /* 🎵 SETTINGS */
         const youtubeLink = "https://www.youtube.com/watch?v=-MlR6tFh8Gs&list=RD-MlR6tFh8Gs&start_radio=1"; 
         const startAtSecond = 24; 
+        const yourParagraph = `My dearest [Her Name],
+
+[PASTE YOUR PARAGRAPH HERE]`;
 
         const yesBtn = document.getElementById('yes-btn');
         const noBtn = document.getElementById('no-btn');
         const mainCard = document.getElementById('main-card');
         const celebration = document.getElementById('celebration');
-        const gif = document.getElementById('valentine-gif');
         
-        let noCount = 0;
-        const noMessages = ["No", "Are you sure?", "Think again!", "Pookie please...", "PLEASE SAY YES ❤️"];
+        // --- 1. RUNAWAY NO BUTTON (Mobile Friendly) ---
+        noBtn.addEventListener('touchstart', moveButton);
+        noBtn.addEventListener('mouseover', moveButton);
 
-        noBtn.addEventListener('click', () => {
-            noCount++;
-            if (noCount < noMessages.length) noBtn.innerText = noMessages[noCount];
-            const currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
-            yesBtn.style.fontSize = (currentSize * 1.5) + 'px';
+        function moveButton(e) {
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
             
-            // Switch to sad gif if they keep saying no
-            if (noCount > 2) {
-                gif.src = "https://media.tenor.com/V7e5M8p_8S8AAAAM/cry-sad.gif";
-            }
-        });
+            // Also make Yes button bigger!
+            let currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
+            yesBtn.style.fontSize = (currentSize + 2) + 'px';
+            yesBtn.style.padding = '20px 40px';
+        }
 
+        // --- 2. YES ACTION ---
         yesBtn.addEventListener('click', () => {
             mainCard.classList.add('hidden');
             celebration.classList.remove('hidden');
             
+            // Start Music
+            startMusic();
+            
+            // Start Typewriter
+            typeWriter();
+            
+            // Start Emojis
+            setInterval(createEmoji, 300);
+        });
+
+        function startMusic() {
             if (youtubeLink && youtubeLink !== "PASTE_LINK_HERE") {
                 let videoId = "";
                 const url = youtubeLink;
@@ -171,30 +199,42 @@ My dearest [Her Name],
                     const videoContainer = document.getElementById('video-container');
                     videoContainer.innerHTML = `
                         <div class="video-wrapper">
-                            <iframe 
-                                width="100%" 
-                                height="100%" 
-                                src="https://www.youtube.com/embed/${videoId}?autoplay=1&start=${startAtSecond}&controls=1" 
-                                frameborder="0" 
-                                allow="autoplay; encrypted-media" 
-                                allowfullscreen>
-                            </iframe>
+                            <iframe width="100%" height="100%" 
+                            src="https://www.youtube.com/embed/${videoId}?autoplay=1&start=${startAtSecond}&controls=1" 
+                            frameborder="0" allow="autoplay; encrypted-media"></iframe>
                         </div>`;
                 }
             }
-            
-            setInterval(createHeart, 300);
-        });
+        }
 
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.classList.add('heart');
-            heart.innerText = '❤️';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
-            heart.style.animation = `fall ${Math.random() * 2 + 3}s linear forwards`;
-            document.body.appendChild(heart);
-            setTimeout(() => heart.remove(), 5000);
+        function typeWriter() {
+            const element = document.getElementById('typewriter-text');
+            const text = yourParagraph;
+            let i = 0;
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, 50);
+                    // Auto scroll to bottom as it types
+                    window.scrollTo(0, document.body.scrollHeight);
+                } else {
+                    document.getElementById('signature').style.opacity = '1';
+                }
+            }
+            type();
+        }
+
+        function createEmoji() {
+            const emojis = ['❤️', '💖', '✨', '🌸', '🧸'];
+            const e = document.createElement('div');
+            e.classList.add('emoji');
+            e.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+            e.style.left = Math.random() * 100 + 'vw';
+            e.style.fontSize = (Math.random() * 20 + 20) + 'px';
+            e.style.animation = `fall ${Math.random() * 2 + 3}s linear forwards`;
+            document.body.appendChild(e);
+            setTimeout(() => e.remove(), 5000);
         }
     </script>
 </body>
